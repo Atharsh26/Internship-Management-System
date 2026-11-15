@@ -27,7 +27,6 @@ Company registers -> Admin verifies -> Company posts internship -> Admin approve
 4. Open http://localhost:8080
 
 ## UI & exports
-- Font: Google Sans (loaded from Google Fonts, falls back to system fonts offline).
 - Dark theme is the default. Switch to Light on the **Profile** page (saved in the browser).
 - Profile page also has **Download your data (Excel)** buttons: students get their applications; companies get internships/applicants; admins get students, companies, internships, applications, users, or everything in one workbook.
 
