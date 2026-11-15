@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title} + ' | Internship Management System'">Internship Management System</title>
+  <script>
+    (function () {
+      var t = 'dark';
+      try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+<nav class="navbar" th:fragment="navbar">
+  <a class="brand" th:href="@{/}">Internship Management</a>
+  <div class="links">
+    <th:block sec:authorize="hasRole('STUDENT')">
+      <a class="nav-item" th:href="@{/student/dashboard}" title="My Applications"><i data-lucide="layout-dashboard"></i><span class="nav-text">My Applications</span></a>
+      <a class="nav-item" th:href="@{/student/internships}" title="Browse Internships"><i data-lucide="briefcase"></i><span class="nav-text">Browse Internships</span></a>
+      <a class="nav-item" th:href="@{/student/analyzer}" title="Resume &amp; Skills"><i data-lucide="file-search"></i><span class="nav-text">Resume &amp; Skills</span></a>
+      <a class="nav-item" th:href="@{/student/scam}" title="Scam Check"><i data-lucide="shield-alert"></i><span class="nav-text">Scam Check</span></a>
+      <a class="nav-item" th:href="@{/student/certificates}" title="Certificates"><i data-lucide="award"></i><span class="nav-text">Certificates</span></a>
+      <a class="nav-item" th:href="@{/student/profile}" title="Profile"><i data-lucide="user-circle"></i><span class="nav-text">Profile</span></a>
+    </th:block>
+    <th:block sec:authorize="hasRole('COMPANY')">
+      <a class="nav-item" th:href="@{/company/dashboard}" title="Dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-text">Dashboard</span></a>
+      <a class="nav-item" th:href="@{/company/internships/new}" title="Post Internship"><i data-lucide="plus-circle"></i><span class="nav-text">Post Internship</span></a>
+      <a class="nav-item" th:href="@{/account}" title="Profile"><i data-lucide="user-circle"></i><span class="nav-text">Profile</span></a>
+    </th:block>
+    <th:block sec:authorize="hasRole('ADMIN')">
+      <a class="nav-item" th:href="@{/admin/dashboard}" title="Dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-text">Dashboard</span></a>
+      <a class="nav-item" th:href="@{/admin/companies}" title="Companies"><i data-lucide="building-2"></i><span class="nav-text">Companies</span></a>
+      <a class="nav-item" th:href="@{/admin/internships}" title="Internships"><i data-lucide="briefcase"></i><span class="nav-text">Internships</span></a>
+      <a class="nav-item" th:href="@{/admin/applications}" title="Applications"><i data-lucide="file-text"></i><span class="nav-text">Applications</span></a>
+      <a class="nav-item" th:href="@{/admin/users}" title="Users"><i data-lucide="users"></i><span class="nav-text">Users</span></a>
+      <a class="nav-item" th:href="@{/admin/scam-reports}" title="Scam Reports"><i data-lucide="shield-alert"></i><span class="nav-text">Scam Reports</span></a>
+      <a class="nav-item" th:href="@{/admin/analytics}" title="Analytics"><i data-lucide="bar-chart-3"></i><span class="nav-text">Analytics</span></a>
+      <a class="nav-item" th:href="@{/account}" title="Profile"><i data-lucide="user-circle"></i><span class="nav-text">Profile</span></a>
+    </th:block>
+    <a class="nav-item nav-notif" th:href="@{/notifications}" title="Notifications">
+      <i data-lucide="bell"></i>
+      <span class="nav-text">Notifications</span>
+      <span class="badge badge-warn" th:if="${unreadCount != null and unreadCount > 0}" th:text="${unreadCount}">0</span>
+    </a>
+  </div>
+  <div class="nav-user">
+    <span class="muted small user-email" sec:authentication="name">user</span>
+    <form th:action="@{/logout}" method="post">
+      <button type="submit" class="btn-link logout-btn" title="Logout">
+        <i data-lucide="log-out"></i>
+        <span class="nav-text">Logout</span>
+      </button>
+    </form>
+  </div>
+</nav>
+<div th:fragment="flash">
+  <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+  <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+</div>
+<!-- Theme + Excel downloads, shown on every role's profile page -->
+<div class="card settings" th:fragment="settings">
+  <h2>Appearance</h2>
+  <p class="muted small">Dark theme is the default. Your choice is saved in this browser.</p>
+  <div class="row">
+    <button type="button" class="btn btn-gray" data-theme-set="dark">Dark</button>
+    <button type="button" class="btn btn-gray" data-theme-set="light">Light</button>
+  </div>
+
+  <h2 style="margin-top:1.8rem">Download your data (Excel)</h2>
+  <div class="row" sec:authorize="hasRole('STUDENT')">
+    <a class="btn" th:href="@{/export/my-applications}">My applications (.xlsx)</a>
+  </div>
+  <div class="row" sec:authorize="hasRole('COMPANY')">
+    <a class="btn" th:href="@{/export/my-internships}">My internships (.xlsx)</a>
+    <a class="btn" th:href="@{/export/my-applicants}">Applicants (.xlsx)</a>
+    <a class="btn" th:href="@{/export/my-all}">Everything (.xlsx)</a>
+  </div>
+  <div class="row" sec:authorize="hasRole('ADMIN')">
+    <a class="btn" th:href="@{/export/students}">Students</a>
+    <a class="btn" th:href="@{/export/companies}">Companies</a>
+    <a class="btn" th:href="@{/export/internships}">Internships</a>
+    <a class="btn" th:href="@{/export/applications}">Applications</a>
+    <a class="btn" th:href="@{/export/users}">Users</a>
+    <a class="btn btn-ok" th:href="@{/export/all-data}">All data (one workbook)</a>
+  </div>
+</div>
+</body>
+</html>

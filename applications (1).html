@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Applications')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <p><a th:href="@{/company/dashboard}">&larr; Back to dashboard</a></p>
+  <h1>Applications &ndash; <span th:text="${internship.title}">Internship</span></h1>
+  <div class="card empty" th:if="${applications.isEmpty()}">No applications received yet.</div>
+  <div class="card" th:each="a : ${applications}">
+    <div class="spread">
+      <div>
+        <h3><a th:href="@{/company/applications/{id}/candidate(id=${a.id})}" th:text="${a.student.user.name}">Name</a>
+          <span class="badge" th:classappend="${'st-' + a.status}" th:text="${a.status.label}">Applied</span></h3>
+        <div class="muted small"><span th:text="${a.student.user.email}">e</span> &middot; <span th:text="${a.student.registerNumber}">123</span>
+          &middot; <span th:text="${a.student.department}">CSE</span> &middot; applied <span th:text="${#temporals.format(a.appliedDate, 'dd MMM yyyy')}">d</span></div>
+      </div>
+      <div class="row">
+        <a class="btn btn-sm btn-gray" th:href="@{/company/applications/{id}/candidate(id=${a.id})}">Profile</a>
+        <a class="btn btn-sm btn-gray" th:href="@{/resumes/application/{id}(id=${a.id})}">Resume</a>
+        <a class="btn btn-sm btn-gray" th:href="@{/messages/application/{id}(id=${a.id})}">Messages</a>
+        <a class="btn btn-sm" th:if="${a.status.name() == 'SELECTED'}" th:href="@{/company/applications/{id}/progress(id=${a.id})}">Progress &amp; certificate</a>
+      </div>
+    </div>
+    <div th:if="${a.status.name() != 'WITHDRAWN'}">
+      <div class="row" style="margin-top:.6rem">
+        <form th:action="@{/company/applications/{id}/status(id=${a.id})}" method="post" class="row">
+          <select name="status" style="width:auto">
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == a.status}"></option>
+          </select>
+          <button class="btn btn-sm" type="submit">Update status</button>
+        </form>
+        <form th:action="@{/company/applications/{id}/status(id=${a.id})}" method="post">
+          <input type="hidden" name="status" value="SHORTLISTED"><button class="btn btn-sm btn-ok" type="submit">Shortlist</button></form>
+        <form th:action="@{/company/applications/{id}/status(id=${a.id})}" method="post" data-confirm="Reject this candidate?">
+          <input type="hidden" name="status" value="REJECTED"><button class="btn btn-sm btn-bad" type="submit">Reject</button></form>
+      </div>
+      <details style="margin-top:.6rem" th:if="${!a.status.closed}"><summary>Schedule interview</summary>
+        <form th:action="@{/company/applications/{id}/interview(id=${a.id})}" method="post" class="row" style="margin-top:.5rem">
+          <input type="datetime-local" name="scheduledAt" required style="width:auto">
+          <select name="mode" style="width:auto"><option>Online</option><option>On-site</option><option>Phone</option></select>
+          <input type="text" name="locationOrLink" placeholder="Meeting link / address" style="width:220px">
+          <input type="text" name="notes" placeholder="Notes" style="width:180px">
+          <button class="btn btn-sm" type="submit">Schedule &amp; notify</button>
+        </form>
+      </details>
+      <details style="margin-top:.4rem"><summary>Send a notification</summary>
+        <form th:action="@{/company/applications/{id}/notify(id=${a.id})}" method="post" class="row" style="margin-top:.5rem">
+          <input type="text" name="message" required maxlength="300" placeholder="Message to the student" style="width:360px">
+          <button class="btn btn-sm" type="submit">Send</button>
+        </form>
+      </details>
+    </div>
+  </div>
+</main>
+</body>
+</html>

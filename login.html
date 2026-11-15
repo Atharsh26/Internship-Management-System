@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Internship Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/login-dark.css}">
+    <script th:src="@{/js/login-dark.js}" defer></script>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- Left Panel: Login Form -->
+        <div class="login-left">
+            <div class="login-container">
+                <!-- Brand Icon -->
+                <div class="brand-badge">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L14.8 9.2L22 12L14.8 14.8L12 22L9.2 14.8L2 12L9.2 9.2L12 2Z" fill="#090C12"/>
+                    </svg>
+                </div>
+
+                <h1 class="login-title">Step Inside</h1>
+                <p class="login-subtitle">Access your internship portal and pick up where you left off.</p>
+
+                <!-- Spring Security Error / Logout Alerts -->
+                <div th:if="${param.error}" class="alert alert-error">
+                    Invalid email or password, or account disabled. Please try again.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out successfully.
+                </div>
+                <div th:if="${param.registered}" class="alert alert-success">
+                    Registration successful! Please sign in.
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" th:action="@{/login}" method="post" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Email</label>
+                        <input type="email" id="username" name="username" placeholder="name@university.edu" autocomplete="username" required autofocus>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Your secret key" autocomplete="current-password" required>
+                            <button type="button" id="togglePassword" class="toggle-password" aria-label="Show password" title="Show password">
+                                <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <svg id="eyeClosed" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/>
+                                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/>
+                                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/>
+                                    <line x1="2" x2="22" y1="2" y2="22"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember-me" checked>
+                            <span class="checkmark"></span>
+                            <span>Remember this device</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="loginSubmit" class="btn-submit">Enter Portal</button>
+                </form>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>New here? Create an account</span>
+                </div>
+
+                <!-- Register Options (Student & Company Only) -->
+                <div class="register-actions">
+                    <a th:href="@{/register/student}" class="btn-register">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                        <span>Register as Student</span>
+                    </a>
+
+                    <a th:href="@{/register/company}" class="btn-register">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        <span>Register as Company</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Mountain Image -->
+        <div class="login-right">
+            <div class="image-card">
+                <img th:src="@{/images/login-mountain.jpg}" src="/images/login-mountain.jpg" alt="Mountain peaks at dusk">
+                <div class="image-overlay"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Browse Internships')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <h1>Available Internships</h1>
+  <div class="card">
+    <form th:action="@{/student/internships}" method="get" class="row">
+      <input type="text" name="q" th:value="${q}" placeholder="Company name or job role" style="width:240px">
+      <select name="location" style="width:auto"><option value="">All locations</option>
+        <option th:each="l : ${locations}" th:value="${l}" th:text="${l}" th:selected="${l == location}"></option></select>
+      <select name="domain" style="width:auto"><option value="">All domains</option>
+        <option th:each="d : ${domains}" th:value="${d}" th:text="${d}" th:selected="${d == domain}"></option></select>
+      <input type="number" name="minStipend" min="0" step="500" th:value="${minStipend}" placeholder="Min stipend / month" style="width:190px">
+      <button class="btn" type="submit">Search</button>
+      <a class="btn btn-gray" th:href="@{/student/internships}">Reset</a>
+    </form>
+  </div>
+  <div class="card empty" th:if="${internships.isEmpty()}">No open internships found.</div>
+  <div class="card internship" th:each="i : ${internships}">
+    <div class="spread">
+      <div>
+        <h3><a th:href="@{/student/internships/{id}(id=${i.id})}" th:text="${i.title}">Title</a></h3>
+        <div class="meta">
+          <strong th:text="${i.company.companyName}">Company</strong>
+          <span th:if="${i.location != null and !i.location.isBlank()}"> &middot; <span th:text="${i.location}"></span></span>
+          <span th:if="${i.domain != null}"> &middot; <span th:text="${i.domain}"></span></span>
+          &middot; <span th:text="${i.stipend != null and i.stipend > 0} ? ('&#8377;' + ${i.stipend} + '/month') : 'Unpaid / not stated'">stipend</span>
+          &middot; Apply by <span th:text="${#temporals.format(i.deadline, 'dd MMM yyyy')}">date</span>
+        </div>
+      </div>
+      <div class="row">
+        <a class="btn btn-sm btn-gray" th:href="@{/student/internships/{id}(id=${i.id})}">Details</a>
+        <span class="badge badge-ok" th:if="${appliedIds.contains(i.id)}">Applied</span>
+        <form th:unless="${appliedIds.contains(i.id)}" th:action="@{/student/internships/{id}/apply(id=${i.id})}" method="post"
+              data-confirm="Apply to this internship with your uploaded resume?">
+          <button class="btn" type="submit">Apply</button>
+        </form>
+      </div>
+    </div>
+    <p th:text="${#strings.abbreviate(i.description, 220)}">Description</p>
+  </div>
+</main>
+</body>
+</html>

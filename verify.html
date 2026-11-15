@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Verify Certificate')}"></head>
+<body>
+<main class="container">
+  <h1>Verify an internship certificate</h1>
+  <div class="card" style="max-width:600px">
+    <form th:action="@{/verify}" method="post" class="row">
+      <input type="text" name="certId" placeholder="e.g. IMS-1A2B3C4D5E6F" th:value="${id}" required>
+      <button class="btn" type="submit">Verify</button>
+    </form>
+  </div>
+  <div class="card" style="max-width:600px" th:if="${id != null and c != null}">
+    <div class="alert alert-success">Valid certificate</div>
+    <p><strong>Student:</strong> <span th:text="${c.application.student.user.name}">n</span></p>
+    <p><strong>Internship:</strong> <span th:text="${c.application.internship.title}">t</span></p>
+    <p><strong>Company:</strong> <span th:text="${c.application.internship.company.companyName}">c</span></p>
+    <p><strong>Issued:</strong> <span th:text="${#temporals.format(c.issuedOn, 'dd MMM yyyy')}">d</span></p>
+    <p><strong>Certificate ID:</strong> <span th:text="${c.certificateId}">id</span></p>
+  </div>
+  <div class="card" style="max-width:600px" th:if="${id != null and c == null}">
+    <div class="alert alert-error">No certificate found with this ID.</div>
+  </div>
+</main>
+</body>
+</html>
