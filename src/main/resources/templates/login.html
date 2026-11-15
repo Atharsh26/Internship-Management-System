@@ -13,7 +13,30 @@
       <div class="form-group"><label for="username">Email</label>
         <input type="email" id="username" name="username" required autofocus></div>
       <div class="form-group"><label for="password">Password</label>
-        <input type="password" id="password" name="password" required></div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="password" id="password" name="password" required style="flex: 1;">
+
+        <button type="button" class="btn btn-gray" id="togglePassword" onclick="togglePasswordVisibility()">
+            show
+        </button>
+    </div>
+</div>
+
+<script>
+    function togglePasswordVisibility() {
+        const password = document.getElementById("password");
+        const button = document.getElementById("togglePassword");
+
+        if (password.type === "password") {
+            password.type = "text";
+            button.textContent = "Hide";
+        } else {
+            password.type = "password";
+            button.textContent = "Show";
+        }
+    }
+</script>
+
       <button type="submit" class="btn">Login</button>
     </form>
     <p class="small" style="text-align:center;margin-top:1.2rem">
