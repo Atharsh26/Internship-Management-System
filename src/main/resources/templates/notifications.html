@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Notifications')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <div class="spread"><h1>Notifications</h1>
+    <form th:action="@{/notifications/read-all}" method="post"><button class="btn btn-gray" type="submit">Mark all read</button></form></div>
+  <div class="card empty" th:if="${items.isEmpty()}">Nothing here yet.</div>
+  <div class="card" th:each="n : ${items}">
+    <a th:href="@{/notifications/{id}/open(id=${n.id})}" th:text="${n.message}">m</a>
+    <span class="badge badge-warn" th:unless="${n.read}">new</span>
+    <div class="muted small" th:text="${#temporals.format(n.createdAt, 'dd MMM yyyy, hh:mm a')}">t</div>
+  </div>
+</main>
+</body>
+</html>

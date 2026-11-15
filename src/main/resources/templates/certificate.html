@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Certificate')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <div class="cert">
+    <div class="muted">CERTIFICATE OF INTERNSHIP COMPLETION</div>
+    <h1 th:text="${c.application.student.user.name}">Name</h1>
+    <p>has successfully completed the internship</p>
+    <h2 th:text="${c.application.internship.title}">Title</h2>
+    <p>at <strong th:text="${c.application.internship.company.companyName}">Company</strong></p>
+    <p class="muted" th:text="'Issued on ' + ${#temporals.format(c.issuedOn, 'dd MMM yyyy')}">date</p>
+    <hr>
+    <p>Certificate ID: <strong th:text="${c.certificateId}">ID</strong></p>
+    <p class="small muted">Verify at <span th:text="'/verify/' + ${c.certificateId}">/verify/ID</span></p>
+  </div>
+  <p style="text-align:center" class="no-print"><button class="btn" onclick="window.print()">Print / Save as PDF</button></p>
+</main>
+</body>
+</html>

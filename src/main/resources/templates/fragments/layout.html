@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title} + ' | Internship Management System'">Internship Management System</title>
+  <script>
+    (function () {
+      var t = 'dark';
+      try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;display=swap">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body>
+<nav class="navbar" th:fragment="navbar">
+  <a class="brand" th:href="@{/}">Internship Management</a>
+  <div class="links">
+    <th:block sec:authorize="hasRole('STUDENT')">
+      <a th:href="@{/student/dashboard}">My Applications</a>
+      <a th:href="@{/student/internships}">Browse Internships</a>
+      <a th:href="@{/student/analyzer}">Resume &amp; Skills</a>
+      <a th:href="@{/student/scam}">Scam Check</a>
+      <a th:href="@{/student/certificates}">Certificates</a>
+      <a th:href="@{/student/profile}">Profile</a>
+    </th:block>
+    <th:block sec:authorize="hasRole('COMPANY')">
+      <a th:href="@{/company/dashboard}">Dashboard</a>
+      <a th:href="@{/company/internships/new}">Post Internship</a>
+      <a th:href="@{/account}">Profile</a>
+    </th:block>
+    <th:block sec:authorize="hasRole('ADMIN')">
+      <a th:href="@{/admin/dashboard}">Dashboard</a>
+      <a th:href="@{/admin/companies}">Companies</a>
+      <a th:href="@{/admin/internships}">Internships</a>
+      <a th:href="@{/admin/applications}">Applications</a>
+      <a th:href="@{/admin/users}">Users</a>
+      <a th:href="@{/admin/scam-reports}">Scam Reports</a>
+      <a th:href="@{/admin/analytics}">Analytics</a>
+      <a th:href="@{/account}">Profile</a>
+    </th:block>
+    <a th:href="@{/notifications}">Notifications<span class="badge badge-warn" th:if="${unreadCount != null and unreadCount > 0}" th:text="${unreadCount}" style="margin-left:.3rem">0</span></a>
+    <span class="muted small" sec:authentication="name">user</span>
+    <form th:action="@{/logout}" method="post"><button type="submit" class="btn-link">Logout</button></form>
+  </div>
+</nav>
+<div th:fragment="flash">
+  <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+  <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+</div>
+<!-- Theme + Excel downloads, shown on every role's profile page -->
+<div class="card settings" th:fragment="settings">
+  <h2>Appearance</h2>
+  <p class="muted small">Dark theme is the default. Your choice is saved in this browser.</p>
+  <div class="row">
+    <button type="button" class="btn btn-gray" data-theme-set="dark">Dark</button>
+    <button type="button" class="btn btn-gray" data-theme-set="light">Light</button>
+  </div>
+
+  <h2 style="margin-top:1.8rem">Download your data (Excel)</h2>
+  <div class="row" sec:authorize="hasRole('STUDENT')">
+    <a class="btn" th:href="@{/export/my-applications}">My applications (.xlsx)</a>
+  </div>
+  <div class="row" sec:authorize="hasRole('COMPANY')">
+    <a class="btn" th:href="@{/export/my-internships}">My internships (.xlsx)</a>
+    <a class="btn" th:href="@{/export/my-applicants}">Applicants (.xlsx)</a>
+    <a class="btn" th:href="@{/export/my-all}">Everything (.xlsx)</a>
+  </div>
+  <div class="row" sec:authorize="hasRole('ADMIN')">
+    <a class="btn" th:href="@{/export/students}">Students</a>
+    <a class="btn" th:href="@{/export/companies}">Companies</a>
+    <a class="btn" th:href="@{/export/internships}">Internships</a>
+    <a class="btn" th:href="@{/export/applications}">Applications</a>
+    <a class="btn" th:href="@{/export/users}">Users</a>
+    <a class="btn btn-ok" th:href="@{/export/all-data}">All data (one workbook)</a>
+  </div>
+</div>
+</body>
+</html>

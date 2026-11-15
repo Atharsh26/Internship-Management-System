@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Scam Check Result')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <p><a th:href="@{/student/scam}">&larr; Back</a></p>
+  <div class="card" style="max-width:760px">
+    <h1>Risk: <span th:class="${'risk-' + sr.riskLevel}" th:text="${sr.riskLevel}">LOW</span></h1>
+    <div class="meter"><span th:style="${'width:' + sr.riskScore + '%'}"></span></div>
+    <p><strong th:text="${sr.riskScore} + ' / 100'">0</strong></p>
+    <div class="alert alert-error" th:if="${sr.riskLevel == 'HIGH'}">Warning: this looks very suspicious. Do not pay money, share documents or click links.</div>
+    <div class="alert alert-info" th:if="${sr.riskLevel == 'MEDIUM'}">Be careful. Verify the company on its official website before replying.</div>
+    <div class="alert alert-success" th:if="${sr.riskLevel == 'LOW'}">No major warning signs found, but this does not prove the email is genuine. Always verify the company.</div>
+    <h3>Why</h3>
+    <ul><li th:each="r : ${reasons}" th:text="${r}"></li></ul>
+    <hr>
+    <p th:if="${sr.reported}">Reported to admin. Status: <strong th:text="${sr.adminStatus}">OPEN</strong>
+       <span th:if="${sr.adminNote != null}"> &mdash; <span th:text="${sr.adminNote}"></span></span></p>
+    <form th:unless="${sr.reported}" th:action="@{/student/scam/{id}/report(id=${sr.id})}" method="post">
+      <button class="btn btn-bad" type="submit">Report as suspected scam to admin</button></form>
+  </div>
+</main>
+</body>
+</html>

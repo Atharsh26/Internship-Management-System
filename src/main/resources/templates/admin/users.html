@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Users')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <h1>Manage users</h1>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Account</th><th></th></tr></thead>
+      <tbody><tr th:each="u : ${users}">
+        <td th:text="${u.name}">Name</td>
+        <td th:text="${u.email}">email</td>
+        <td th:text="${u.role}">STUDENT</td>
+        <td><span class="badge badge-ok" th:if="${u.enabled}">Active</span>
+            <span class="badge badge-gray" th:unless="${u.enabled}">Disabled</span></td>
+        <td>
+          <form th:if="${u.role.name() != 'ADMIN'}" th:action="@{/admin/users/{id}/toggle(id=${u.id})}" method="post"
+                data-confirm="Change this account's status?">
+            <button class="btn btn-sm" th:classappend="${u.enabled} ? 'btn-bad' : 'btn-ok'" type="submit"
+                    th:text="${u.enabled} ? 'Disable' : 'Enable'">Toggle</button>
+          </form>
+        </td>
+      </tr></tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

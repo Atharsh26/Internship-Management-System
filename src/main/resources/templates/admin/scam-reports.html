@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Scam Reports')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <h1>Reported scam emails</h1>
+  <div class="card empty" th:if="${reports.isEmpty()}">No reports yet.</div>
+  <div class="card" th:each="r : ${reports}">
+    <div class="spread">
+      <div><strong th:text="${r.subject != null} ? ${r.subject} : '(no subject)'">sub</strong>
+        <div class="muted small">From <span th:text="${r.senderEmail}">s</span> &middot; reported by <span th:text="${r.student.name}">n</span>
+          &middot; <span th:text="${#temporals.format(r.createdAt, 'dd MMM yyyy')}">d</span></div></div>
+      <div><span th:class="${'risk-' + r.riskLevel}" th:text="${r.riskLevel + ' (' + r.riskScore + ')'}">LOW</span>
+        <span class="badge badge-gray" th:text="${r.adminStatus}">OPEN</span></div>
+    </div>
+    <details><summary>Email content &amp; analysis</summary>
+      <p style="white-space:pre-line" th:text="${r.content}">c</p>
+      <p class="muted small" style="white-space:pre-line" th:text="${r.reasons}">why</p></details>
+    <form th:action="@{/admin/scam-reports/{id}/review(id=${r.id})}" method="post" class="row" style="margin-top:.6rem">
+      <input type="text" name="note" maxlength="500" placeholder="Note for the student (optional)" th:value="${r.adminNote}" style="width:300px">
+      <button class="btn btn-sm btn-bad" name="decision" value="CONFIRMED_SCAM" type="submit">Confirm scam</button>
+      <button class="btn btn-sm btn-gray" name="decision" value="DISMISSED" type="submit">Dismiss</button>
+    </form>
+  </div>
+</main>
+</body>
+</html>

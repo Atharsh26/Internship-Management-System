@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('My Certificates')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <h1>My Certificates</h1>
+  <div class="card empty" th:if="${certificates.isEmpty()}">No certificates yet. They appear after a company marks your internship complete.</div>
+  <div class="table-wrap" th:if="${!certificates.isEmpty()}"><table>
+    <thead><tr><th>Certificate ID</th><th>Internship</th><th>Company</th><th>Issued</th><th></th></tr></thead>
+    <tbody><tr th:each="c : ${certificates}">
+      <td th:text="${c.certificateId}">id</td>
+      <td th:text="${c.application.internship.title}">t</td>
+      <td th:text="${c.application.internship.company.companyName}">c</td>
+      <td th:text="${#temporals.format(c.issuedOn, 'dd MMM yyyy')}">d</td>
+      <td><a class="btn btn-sm" th:href="@{/certificates/{id}(id=${c.certificateId})}">View / print</a></td>
+    </tr></tbody></table></div>
+</main>
+</body>
+</html>
