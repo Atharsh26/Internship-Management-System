@@ -1,0 +1,168 @@
+/* Dark-only login page. Google Sans is used when installed; Roboto is the web fallback. */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
+
+:root {
+  color-scheme: dark;
+  --page: #101116;
+  --panel: #191b23;
+  --panel-soft: #20232d;
+  --text: #f4f5f8;
+  --muted: #a6adbb;
+  --field: #222631;
+  --field-border: #3a4050;
+  --accent: #3999e8;
+  --accent-hover: #2584d4;
+  --aqua: #8ce4dc;
+  --success: #39b878;
+  --error: #ff737d;
+  --shadow: 0 22px 65px rgba(0,0,0,.38);
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body.ims-login {
+  margin: 0;
+  min-height: 100vh;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 17% 10%, rgba(69, 190, 184, .18), transparent 33%),
+    radial-gradient(ellipse at 85% 88%, rgba(57, 153, 232, .13), transparent 34%),
+    var(--page);
+  color: var(--text);
+  font-family: "Google Sans", "Product Sans", Roboto, Arial, sans-serif;
+}
+.login-frame {
+  width: min(1280px, 100%);
+  min-height: min(690px, calc(100vh - 56px));
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #303541;
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.login-art-side {
+  position: relative;
+  min-height: 620px;
+  padding: 42px 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 40% 48%, rgba(115, 225, 215, .15), transparent 55%),
+    linear-gradient(145deg, #202b36, #19222c 70%);
+}
+.login-art-side::before {
+  content: "";
+  position: absolute;
+  width: 540px; height: 540px;
+  border-radius: 50%;
+  background: rgba(93, 213, 202, .12);
+  top: 12%; left: -18%;
+}
+.login-brand {
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .1px;
+}
+.brand-mark {
+  width: 29px; height: 29px;
+  display: inline-grid; place-items: center;
+  border-radius: 9px;
+  color: #101820;
+  background: var(--aqua);
+  font-size: 18px;
+}
+.illustration-wrap {
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: 1;
+  padding: 25px 0;
+}
+.reception-illustration {
+  width: min(100%, 550px);
+  max-height: 430px;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 22px rgba(0,0,0,.18));
+}
+.art-caption { z-index: 1; max-width: 470px; }
+.art-caption h2 { margin: 0 0 10px; font-size: clamp(25px, 3vw, 36px); line-height: 1.15; }
+.art-caption p { margin: 0; color: #bdcbd4; line-height: 1.65; font-size: 15px; }
+.login-form-side {
+  position: relative;
+  padding: clamp(38px, 6vw, 78px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--panel);
+}
+.login-form-side h1 { margin: 0 0 12px; font-size: clamp(28px, 3vw, 36px); font-weight: 600; letter-spacing: -.7px; }
+.login-subtitle { color: var(--muted); margin: 0 0 36px; line-height: 1.6; font-size: 15px; }
+.login-alert {
+  padding: 12px 14px; border-radius: 10px; margin: 0 0 18px;
+  font-size: 14px; line-height: 1.45;
+}
+.login-alert.error { background: rgba(255,115,125,.12); border: 1px solid rgba(255,115,125,.28); color: #ffadb3; }
+.login-alert.info { background: rgba(57,153,232,.12); border: 1px solid rgba(57,153,232,.25); color: #a9d8ff; }
+.login-alert.success { background: rgba(57,184,120,.12); border: 1px solid rgba(57,184,120,.25); color: #9be5bd; }
+.login-form .form-group { margin-bottom: 22px; }
+.login-form label { display: block; margin: 0 0 9px; font-size: 14px; font-weight: 600; color: #e7eaf0; }
+.login-form input {
+  width: 100%; min-width: 0; height: 52px; padding: 0 15px;
+  border: 1px solid var(--field-border); border-radius: 9px;
+  background: var(--field); color: var(--text);
+  font: inherit; font-size: 15px; outline: none;
+}
+.login-form input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(57,153,232,.16); }
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 54px; }
+.eye-toggle {
+  position: absolute; right: 7px; top: 7px; width: 38px; height: 38px;
+  display: grid; place-items: center; border: 0; border-radius: 8px;
+  background: transparent; color: #aeb8c8; cursor: pointer;
+}
+.eye-toggle:hover { background: #303747; color: #fff; }
+.eye-toggle svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.eye-toggle .eye-closed { display: none; }
+.eye-toggle.is-visible .eye-open { display: none; }
+.eye-toggle.is-visible .eye-closed { display: block; }
+.login-submit {
+  width: 100%; min-height: 51px; border: 0; border-radius: 9px;
+  background: var(--accent); color: #fff; font: inherit; font-weight: 600;
+  font-size: 15px; cursor: pointer; transition: background .2s, transform .2s;
+}
+.login-submit:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.login-submit:disabled { opacity: .7; cursor: wait; transform: none; }
+.login-register { margin: 26px 0 0; text-align: center; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.login-register a { color: #68baff; text-decoration: none; font-weight: 600; }
+.login-register a:hover { text-decoration: underline; }
+.login-state {
+  display: none; align-items: center; gap: 10px; margin: 0 0 18px;
+  padding: 12px 14px; border-radius: 10px; font-size: 14px;
+}
+.login-state.visible { display: flex; }
+.login-state.success { background: rgba(57,184,120,.12); color: #9be5bd; }
+.login-state.error { background: rgba(255,115,125,.12); color: #ffadb3; }
+.state-symbol { font-size: 19px; }
+@media (max-width: 850px) {
+  body.ims-login { padding: 14px; }
+  .login-frame { grid-template-columns: 1fr; }
+  .login-art-side { min-height: 350px; padding: 25px; }
+  .illustration-wrap { padding: 10px 0; }
+  .reception-illustration { max-height: 250px; }
+  .art-caption h2 { font-size: 25px; }
+  .login-form-side { padding: 38px 28px 42px; }
+}
+@media (max-width: 430px) {
+  .login-art-side { min-height: 300px; }
+  .login-form-side { padding: 32px 21px; }
+}
