@@ -11,20 +11,22 @@
     <a class="btn btn-gray" th:href="@{/admin/reports/applications.csv}">Applications report (CSV)</a></div>
   </div>
   <div class="grid">
-    <div class="card stat"><div class="num" th:text="${studentCount}">0</div><div class="lbl">Students</div></div>
-    <div class="card stat"><div class="num" th:text="${companyCount}">0</div><div class="lbl">Companies</div></div>
-    <div class="card stat"><div class="num" th:text="${internshipCount}">0</div><div class="lbl">Internships</div></div>
-    <div class="card stat"><div class="num" th:text="${applicationCount}">0</div><div class="lbl">Applications</div></div>
+    <a class="stat-link" th:href="@{/admin/users(role='STUDENT')}"><div class="card stat"><div class="num" th:text="${studentCount}">0</div><div class="lbl">Students</div></div></a>
+    <a class="stat-link" th:href="@{/admin/companies}"><div class="card stat"><div class="num" th:text="${companyCount}">0</div><div class="lbl">Companies</div></div></a>
+    <a class="stat-link" th:href="@{/admin/internships}"><div class="card stat"><div class="num" th:text="${internshipCount}">0</div><div class="lbl">Internships</div></div></a>
+    <a class="stat-link" th:href="@{/admin/applications}"><div class="card stat"><div class="num" th:text="${applicationCount}">0</div><div class="lbl">Applications</div></div></a>
   </div>
   <div class="alert alert-info" th:if="${openScamReports > 0}">
-    <span th:text="${openScamReports}">0</span> reported scam email(s) await review. <a th:href="@{/admin/scam-reports}">Review now</a>
+    <a th:href="@{/admin/scam-reports}"><span th:text="${openScamReports}">0</span> reported scam email(s) await review. Review now</a>
   </div>
   <h2>Applications by status</h2>
   <div class="grid">
-    <div class="card stat" th:each="e : ${statusCounts}">
-      <div class="num" th:text="${e.value}">0</div>
-      <div class="lbl"><span class="badge" th:classappend="${'st-' + e.key}" th:text="${e.key}">PENDING</span></div>
-    </div>
+    <a class="stat-link" th:each="e : ${statusCounts}" th:href="@{/admin/applications(status=${e.key})}">
+      <div class="card stat">
+        <div class="num" th:text="${e.value}">0</div>
+        <div class="lbl"><span class="badge" th:classappend="${'st-' + e.key}" th:text="${e.key}">PENDING</span></div>
+      </div>
+    </a>
   </div>
 
   <h2>Companies awaiting verification</h2>

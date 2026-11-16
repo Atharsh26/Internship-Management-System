@@ -4,9 +4,10 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 <main class="container">
-  <h1>Post a new internship</h1>
+  <h1 th:text="${editing} ? 'Edit internship' : 'Post a new internship'">Post a new internship</h1>
+  <p class="muted small" th:if="${editing}">Review and update the details below. Saving changes sends the listing back to the admin for approval.</p>
   <div class="card" style="max-width:700px">
-    <form th:action="@{/company/internships}" th:object="${form}" method="post">
+    <form th:action="${editing} ? @{/company/internships/{id}/edit(id=${internshipId})} : @{/company/internships}" th:object="${form}" method="post">
       <div class="form-group"><label>Title</label>
         <input type="text" th:field="*{title}">
         <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div></div>
@@ -27,7 +28,7 @@
         <input type="date" th:field="*{deadline}">
         <div class="error" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></div></div>
       <div class="row">
-        <button type="submit" class="btn">Submit for approval</button>
+        <button type="submit" class="btn" th:text="${editing} ? 'Save changes and resubmit' : 'Submit for approval'">Submit for approval</button>
         <a class="btn btn-gray" th:href="@{/company/dashboard}">Cancel</a>
       </div>
     </form>

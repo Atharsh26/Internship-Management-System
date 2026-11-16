@@ -7,7 +7,11 @@
   <div th:replace="~{fragments/layout :: flash}"></div>
   <div class="spread">
     <h1>All applications</h1>
-    <a class="btn btn-gray" th:href="@{/admin/reports/applications.csv}">Download CSV</a>
+    <span class="muted small" th:if="${selectedStatus != null}" th:text="'Filtered by: ' + ${selectedStatus}">Filtered</span>
+    <div class="row">
+      <a class="btn btn-gray" th:href="@{/admin/applications}">Clear filter</a>
+      <a class="btn btn-gray" th:href="@{/admin/reports/applications.csv}">Download CSV</a>
+    </div>
   </div>
   <div class="card empty" th:if="${applications.isEmpty()}">No applications yet.</div>
   <div class="table-wrap" th:if="${!applications.isEmpty()}">

@@ -21,7 +21,10 @@
 </head>
 <body>
 <nav class="navbar" th:fragment="navbar">
-  <a class="brand" th:href="@{/}">Internship Management</a>
+  <a class="brand" th:href="@{/}">
+    <img class="header-logo" src="https://academics.psgitech.ac.in/data1/images/logo.png" alt="PSG iTech logo">
+    <span>Internship Management</span>
+  </a>
   <div class="links">
     <th:block sec:authorize="hasRole('STUDENT')">
       <a class="nav-item" th:href="@{/student/dashboard}" title="My Applications"><i data-lucide="layout-dashboard"></i><span class="nav-text">My Applications</span></a>

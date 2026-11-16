@@ -81,6 +81,59 @@ public class CompanyController {
         return "company/internship-form";
     }
 
+    @GetMapping("/internships/{id}/edit")
+    public String editForm(@PathVariable Long id, Principal principal, Model model, RedirectAttributes ra) {
+        Internship internship = owned(id, current(principal));
+        if (internship == null) {
+            ra.addFlashAttribute("error", "Internship not found.");
+            return "redirect:/company/dashboard";
+        }
+        InternshipForm form = new InternshipForm();
+        form.setTitle(internship.getTitle());
+        form.setDescription(internship.getDescription());
+        form.setEligibility(internship.getEligibility());
+        form.setLocation(internship.getLocation());
+        form.setDomain(internship.getDomain());
+        form.setStipend(internship.getStipend());
+        form.setDeadline(internship.getDeadline());
+        model.addAttribute("form", form);
+        model.addAttribute("editing", true);
+        model.addAttribute("internshipId", id);
+        return "company/internship-form";
+    }
+
+    @PostMapping("/internships/{id}/edit")
+    public String update(@PathVariable Long id, @Valid @ModelAttribute("form") InternshipForm form,
+                         BindingResult result, Principal principal, Model model, RedirectAttributes ra) {
+        Company c = current(principal);
+        Internship internship = owned(id, c);
+        if (internship == null) {
+            ra.addFlashAttribute("error", "Internship not found.");
+            return "redirect:/company/dashboard";
+        }
+        if (!c.isVerified()) {
+            ra.addFlashAttribute("error", "Your company must be verified before editing postings.");
+            return "redirect:/company/dashboard";
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("editing", true);
+            model.addAttribute("internshipId", id);
+            return "company/internship-form";
+        }
+        internship.setTitle(form.getTitle().trim());
+        internship.setDescription(form.getDescription().trim());
+        internship.setEligibility(form.getEligibility().trim());
+        internship.setLocation(form.getLocation());
+        internship.setDomain(form.getDomain() == null || form.getDomain().isBlank() ? null : form.getDomain().trim());
+        internship.setStipend(form.getStipend());
+        internship.setDeadline(form.getDeadline());
+        // Edited listings return to admin review so students see only approved details.
+        internship.setApproved(false);
+        internships.save(internship);
+        ra.addFlashAttribute("success", "Changes saved. The edited internship has been sent for admin approval.");
+        return "redirect:/company/dashboard";
+    }
+
     @PostMapping("/internships")
     public String create(@Valid @ModelAttribute("form") InternshipForm form, BindingResult result,
                          Principal principal, RedirectAttributes ra) {

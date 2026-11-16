@@ -100,8 +100,13 @@ public class AdminController {
 
     // ---------- users ----------
     @GetMapping("/users")
-    public String userList(Model model) {
-        model.addAttribute("users", users.findAll());
+    public String userList(@RequestParam(required = false) String role, Model model) {
+        var allUsers = users.findAll();
+        if (role != null && !role.isBlank()) {
+            allUsers = allUsers.stream().filter(u -> u.getRole().name().equalsIgnoreCase(role)).toList();
+            model.addAttribute("selectedRole", role.toUpperCase());
+        }
+        model.addAttribute("users", allUsers);
         return "admin/users";
     }
 
@@ -121,8 +126,13 @@ public class AdminController {
 
     // ---------- applications & reports ----------
     @GetMapping("/applications")
-    public String applicationList(Model model) {
-        model.addAttribute("applications", applications.findAll());
+    public String applicationList(@RequestParam(required = false) ApplicationStatus status, Model model) {
+        var allApplications = applications.findAll();
+        if (status != null) {
+            allApplications = allApplications.stream().filter(a -> a.getStatus() == status).toList();
+            model.addAttribute("selectedStatus", status.name());
+        }
+        model.addAttribute("applications", allApplications);
         return "admin/applications";
     }
 
@@ -192,6 +202,15 @@ public class AdminController {
         model.addAttribute("certificateCount", certificates.count());
         model.addAttribute("perCompany", perCompany);
         model.addAttribute("placedPerCompany", placedPerCompany);
+        Map<String, Long> statusCounts = new LinkedHashMap<>();
+        for (ApplicationStatus status : ApplicationStatus.values()) {
+            statusCounts.put(status.name(), applications.countByStatus(status));
+        }
+        model.addAttribute("statusCounts", statusCounts);
+        long maxStatusCount = statusCounts.values().stream().mapToLong(Long::longValue).max().orElse(0L);
+        model.addAttribute("maxStatusCount", Math.max(1L, maxStatusCount));
+        long maxCompanyCount = perCompany.values().stream().mapToLong(Long::longValue).max().orElse(0L);
+        model.addAttribute("maxCompanyCount", Math.max(1L, maxCompanyCount));
         return "admin/analytics";
     }
 

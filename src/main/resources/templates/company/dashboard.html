@@ -28,6 +28,7 @@
           </td>
           <td th:text="${counts[i.id]}">0</td>
           <td class="row">
+            <a class="btn btn-sm btn-gray" th:href="@{/company/internships/{id}/edit(id=${i.id})}">Edit</a>
             <a class="btn btn-sm" th:href="@{/company/internships/{id}/applications(id=${i.id})}">View applications</a>
             <form th:action="@{/company/internships/{id}/delete(id=${i.id})}" method="post"
                   data-confirm="Delete this internship and all its applications?">

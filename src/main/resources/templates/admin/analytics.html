@@ -5,20 +5,52 @@
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 <main class="container">
   <div th:replace="~{fragments/layout :: flash}"></div>
-  <h1>Reports &amp; Analytics</h1>
+  <div class="spread">
+    <h1>Reports &amp; Analytics</h1>
+    <a class="btn btn-gray" th:href="@{/admin/dashboard}">Back to dashboard</a>
+  </div>
   <div class="grid">
-    <div class="card stat"><div class="num" th:text="${studentCount}">0</div><div class="lbl">Registered students</div></div>
-    <div class="card stat"><div class="num" th:text="${internshipCount}">0</div><div class="lbl">Internship opportunities</div></div>
-    <div class="card stat"><div class="num" th:text="${placed}">0</div><div class="lbl">Students placed</div></div>
+    <a class="stat-link" th:href="@{/admin/users(role='STUDENT')}"><div class="card stat"><div class="num" th:text="${studentCount}">0</div><div class="lbl">Registered students</div></div></a>
+    <a class="stat-link" th:href="@{/admin/internships}"><div class="card stat"><div class="num" th:text="${internshipCount}">0</div><div class="lbl">Internship opportunities</div></div></a>
+    <a class="stat-link" th:href="@{/admin/applications(status='SELECTED')}"><div class="card stat"><div class="num" th:text="${placed}">0</div><div class="lbl">Students placed</div></div></a>
     <div class="card stat"><div class="num" th:text="${successRate} + '%'">0%</div><div class="lbl">Application success rate</div></div>
-    <div class="card stat"><div class="num" th:text="${applicationCount}">0</div><div class="lbl">Applications</div></div>
-    <div class="card stat"><div class="num" th:text="${verifiedCompanies} + ' / ' + ${companyCount}">0</div><div class="lbl">Verified companies</div></div>
+    <a class="stat-link" th:href="@{/admin/applications}"><div class="card stat"><div class="num" th:text="${applicationCount}">0</div><div class="lbl">Applications</div></div></a>
+    <a class="stat-link" th:href="@{/admin/companies}"><div class="card stat"><div class="num" th:text="${verifiedCompanies} + ' / ' + ${companyCount}">0</div><div class="lbl">Verified companies</div></div></a>
     <div class="card stat"><div class="num" th:text="${certificateCount}">0</div><div class="lbl">Certificates issued</div></div>
   </div>
+
+  <h2>Application status overview</h2>
+  <div class="chart-grid">
+    <section class="chart-card">
+      <h2 style="margin-top:0">Applications by status</h2>
+      <p class="muted small">Select a bar to open the matching application report.</p>
+      <div th:each="e : ${statusCounts}" class="chart-row">
+        <a th:href="@{/admin/applications(status=${e.key})}" th:text="${e.key}">PENDING</a>
+        <a class="chart-track" th:href="@{/admin/applications(status=${e.key})}" th:aria-label="${e.key} + ' applications'">
+          <div class="chart-fill" th:style="'width:' + (${e.value * 100.0 / maxStatusCount}) + '%'"></div>
+        </a>
+        <span class="chart-number" th:text="${e.value}">0</span>
+      </div>
+    </section>
+    <section class="chart-card">
+      <h2 style="margin-top:0">Internships by company</h2>
+      <p class="muted small">Number of internship postings submitted by each company.</p>
+      <div th:if="${perCompany.isEmpty()}" class="muted small">No company postings yet.</div>
+      <div th:each="e : ${perCompany}" class="chart-row">
+        <span th:text="${e.key}">Company</span>
+        <div class="chart-track">
+          <div class="chart-fill" th:style="'width:' + (${e.value * 100.0 / maxCompanyCount}) + '%'"></div>
+        </div>
+        <span class="chart-number" th:text="${e.value}">0</span>
+      </div>
+    </section>
+  </div>
+
   <h2>Company participation</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>Company</th><th>Internships posted</th><th>Students placed</th></tr></thead>
-    <tbody><tr th:each="e : ${perCompany}"><td th:text="${e.key}">c</td><td th:text="${e.value}">0</td><td th:text="${placedPerCompany[e.key]}">0</td></tr></tbody></table></div>
+    <tbody><tr th:each="e : ${perCompany}"><td th:text="${e.key}">c</td><td th:text="${e.value}">0</td><td th:text="${placedPerCompany[e.key]}">0</td></tr></tbody>
+  </table></div>
 </main>
 </body>
 </html>
