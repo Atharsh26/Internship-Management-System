@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Internships')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <h1>All internship postings</h1>
+  <div class="card empty" th:if="${internships.isEmpty()}">No internships posted yet.</div>
+  <div class="table-wrap" th:if="${!internships.isEmpty()}">
+    <table>
+      <thead><tr><th>Title</th><th>Company</th><th>Location</th><th>Deadline</th><th>Status</th><th></th></tr></thead>
+      <tbody><tr th:each="i : ${internships}">
+        <td th:text="${i.title}">Title</td>
+        <td th:text="${i.company.companyName}">Company</td>
+        <td th:text="${i.location}">Location</td>
+        <td th:text="${#temporals.format(i.deadline, 'dd MMM yyyy')}">date</td>
+        <td><span class="badge badge-ok" th:if="${i.approved}">Approved</span>
+            <span class="badge badge-warn" th:unless="${i.approved}">Pending</span></td>
+        <td>
+          <form th:unless="${i.approved}" th:action="@{/admin/internships/{id}/approve(id=${i.id})}" method="post">
+            <input type="hidden" name="value" value="true"><button class="btn btn-sm btn-ok" type="submit">Approve</button></form>
+          <form th:if="${i.approved}" th:action="@{/admin/internships/{id}/approve(id=${i.id})}" method="post"
+                data-confirm="Hide this internship from students?">
+            <input type="hidden" name="value" value="false"><button class="btn btn-sm btn-bad" type="submit">Hide</button></form>
+        </td>
+      </tr></tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

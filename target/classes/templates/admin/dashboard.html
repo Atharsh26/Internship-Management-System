@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Admin Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <div class="spread">
+    <h1>Admin Dashboard</h1>
+    <div class="row"><a class="btn" th:href="@{/admin/analytics}">Analytics</a>
+    <a class="btn btn-gray" th:href="@{/admin/reports/applications.csv}">Applications report (CSV)</a></div>
+  </div>
+  <div class="grid">
+    <div class="card stat"><div class="num" th:text="${studentCount}">0</div><div class="lbl">Students</div></div>
+    <div class="card stat"><div class="num" th:text="${companyCount}">0</div><div class="lbl">Companies</div></div>
+    <div class="card stat"><div class="num" th:text="${internshipCount}">0</div><div class="lbl">Internships</div></div>
+    <div class="card stat"><div class="num" th:text="${applicationCount}">0</div><div class="lbl">Applications</div></div>
+  </div>
+  <div class="alert alert-info" th:if="${openScamReports > 0}">
+    <span th:text="${openScamReports}">0</span> reported scam email(s) await review. <a th:href="@{/admin/scam-reports}">Review now</a>
+  </div>
+  <h2>Applications by status</h2>
+  <div class="grid">
+    <div class="card stat" th:each="e : ${statusCounts}">
+      <div class="num" th:text="${e.value}">0</div>
+      <div class="lbl"><span class="badge" th:classappend="${'st-' + e.key}" th:text="${e.key}">PENDING</span></div>
+    </div>
+  </div>
+
+  <h2>Companies awaiting verification</h2>
+  <div class="card empty" th:if="${pendingCompanies.isEmpty()}">Nothing pending.</div>
+  <div class="table-wrap" th:if="${!pendingCompanies.isEmpty()}">
+    <table>
+      <thead><tr><th>Company</th><th>Contact</th><th>Email</th><th></th></tr></thead>
+      <tbody><tr th:each="c : ${pendingCompanies}">
+        <td th:text="${c.companyName}">Company</td>
+        <td th:text="${c.user.name}">Contact</td>
+        <td th:text="${c.user.email}">email</td>
+        <td><form th:action="@{/admin/companies/{id}/verify(id=${c.id})}" method="post">
+          <input type="hidden" name="value" value="true">
+          <button class="btn btn-sm btn-ok" type="submit">Verify</button></form></td>
+      </tr></tbody>
+    </table>
+  </div>
+
+  <h2>Internship postings awaiting approval</h2>
+  <div class="card empty" th:if="${pendingInternships.isEmpty()}">Nothing pending.</div>
+  <div class="table-wrap" th:if="${!pendingInternships.isEmpty()}">
+    <table>
+      <thead><tr><th>Title</th><th>Company</th><th>Deadline</th><th>Company verified?</th><th></th></tr></thead>
+      <tbody><tr th:each="i : ${pendingInternships}">
+        <td th:text="${i.title}">Title</td>
+        <td th:text="${i.company.companyName}">Company</td>
+        <td th:text="${#temporals.format(i.deadline, 'dd MMM yyyy')}">date</td>
+        <td th:text="${i.company.verified} ? 'Yes' : 'No'">Yes</td>
+        <td><form th:action="@{/admin/internships/{id}/approve(id=${i.id})}" method="post">
+          <input type="hidden" name="value" value="true">
+          <button class="btn btn-sm btn-ok" type="submit">Approve</button></form></td>
+      </tr></tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

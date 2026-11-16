@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Internship Progress')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="container">
+  <div th:replace="~{fragments/layout :: flash}"></div>
+  <p><a th:href="@{/student/dashboard}">&larr; Back</a></p>
+  <h1>Progress &ndash; <span th:text="${app.internship.title}">t</span></h1>
+  <p class="muted" th:text="${app.internship.company.companyName}">c</p>
+  <div class="card">
+    <h2>Completion</h2>
+    <div class="meter"><span th:style="${'width:' + completion + '%'}"></span></div>
+    <strong th:text="${completion} + '% of assigned tasks done'">0%</strong>
+    <p th:if="${certificate != null}">Certificate issued: <a th:href="@{/certificates/{id}(id=${certificate.certificateId})}" th:text="${certificate.certificateId}">id</a></p>
+    <a class="btn btn-sm btn-gray" th:href="@{/messages/application/{id}(id=${app.id})}">Message mentor</a>
+  </div>
+  <h2>Assigned tasks</h2>
+  <div class="card empty" th:if="${tasks.isEmpty()}">No tasks assigned yet.</div>
+  <div class="table-wrap" th:if="${!tasks.isEmpty()}"><table>
+    <thead><tr><th>Task</th><th>Details</th><th>Due</th><th>Done</th></tr></thead>
+    <tbody><tr th:each="t : ${tasks}">
+      <td th:text="${t.title}">t</td><td th:text="${t.description}">d</td>
+      <td th:text="${t.dueDate != null} ? ${#temporals.format(t.dueDate, 'dd MMM yyyy')} : '-'">due</td>
+      <td><form th:action="@{/student/tasks/{id}/toggle(id=${t.id})}" method="post">
+        <button class="btn btn-sm" th:classappend="${t.done} ? 'btn-ok' : 'btn-gray'" type="submit" th:text="${t.done} ? 'Done' : 'Mark done'">x</button></form></td>
+    </tr></tbody></table></div>
+  <h2>Weekly progress reports</h2>
+  <div class="card">
+    <form th:action="@{/student/applications/{id}/reports(id=${app.id})}" method="post">
+      <div class="form-group"><label>Week number</label><input type="number" name="weekNumber" min="1" th:value="${nextWeek}" required style="max-width:140px"></div>
+      <div class="form-group"><label>What did you do this week?</label><textarea name="content" required maxlength="2000"></textarea></div>
+      <button class="btn" type="submit">Submit report</button>
+    </form>
+  </div>
+  <div class="card" th:each="r : ${reports}">
+    <strong th:text="'Week ' + ${r.weekNumber}">Week</strong>
+    <span class="muted small" th:text="${#temporals.format(r.submittedOn, 'dd MMM yyyy')}">d</span>
+    <p th:text="${r.content}" style="white-space:pre-line">c</p>
+    <div class="alert alert-info" th:if="${r.mentorFeedback != null}"><strong>Mentor feedback:</strong> <span th:text="${r.mentorFeedback}"></span></div>
+  </div>
+</main>
+</body>
+</html>
