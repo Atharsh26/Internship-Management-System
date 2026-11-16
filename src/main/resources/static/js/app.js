@@ -24,3 +24,7 @@ document.addEventListener('submit', function (e) {
     mark(document.documentElement.getAttribute('data-theme') || 'dark');
   });
 })();
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.lucide) { window.lucide.createIcons(); }
+});

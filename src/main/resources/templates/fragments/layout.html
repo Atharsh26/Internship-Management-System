@@ -14,7 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
   <link rel="stylesheet" th:href="@{/css/style.css}">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
   <script th:src="@{/js/app.js}" defer></script>
 </head>
 <body>
@@ -22,31 +24,42 @@
   <a class="brand" th:href="@{/}">Internship Management</a>
   <div class="links">
     <th:block sec:authorize="hasRole('STUDENT')">
-      <a th:href="@{/student/dashboard}">My Applications</a>
-      <a th:href="@{/student/internships}">Browse Internships</a>
-      <a th:href="@{/student/analyzer}">Resume &amp; Skills</a>
-      <a th:href="@{/student/scam}">Scam Check</a>
-      <a th:href="@{/student/certificates}">Certificates</a>
-      <a th:href="@{/student/profile}">Profile</a>
+      <a class="nav-item" th:href="@{/student/dashboard}" title="My Applications"><i data-lucide="layout-dashboard"></i><span class="nav-text">My Applications</span></a>
+      <a class="nav-item" th:href="@{/student/internships}" title="Browse Internships"><i data-lucide="briefcase"></i><span class="nav-text">Browse Internships</span></a>
+      <a class="nav-item" th:href="@{/student/analyzer}" title="Resume &amp; Skills"><i data-lucide="file-search"></i><span class="nav-text">Resume &amp; Skills</span></a>
+      <a class="nav-item" th:href="@{/student/scam}" title="Scam Check"><i data-lucide="shield-alert"></i><span class="nav-text">Scam Check</span></a>
+      <a class="nav-item" th:href="@{/student/certificates}" title="Certificates"><i data-lucide="award"></i><span class="nav-text">Certificates</span></a>
+      <a class="nav-item" th:href="@{/student/profile}" title="Profile"><i data-lucide="user-circle"></i><span class="nav-text">Profile</span></a>
     </th:block>
     <th:block sec:authorize="hasRole('COMPANY')">
-      <a th:href="@{/company/dashboard}">Dashboard</a>
-      <a th:href="@{/company/internships/new}">Post Internship</a>
-      <a th:href="@{/account}">Profile</a>
+      <a class="nav-item" th:href="@{/company/dashboard}" title="Dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-text">Dashboard</span></a>
+      <a class="nav-item" th:href="@{/company/internships/new}" title="Post Internship"><i data-lucide="plus-circle"></i><span class="nav-text">Post Internship</span></a>
+      <a class="nav-item" th:href="@{/account}" title="Profile"><i data-lucide="user-circle"></i><span class="nav-text">Profile</span></a>
     </th:block>
     <th:block sec:authorize="hasRole('ADMIN')">
-      <a th:href="@{/admin/dashboard}">Dashboard</a>
-      <a th:href="@{/admin/companies}">Companies</a>
-      <a th:href="@{/admin/internships}">Internships</a>
-      <a th:href="@{/admin/applications}">Applications</a>
-      <a th:href="@{/admin/users}">Users</a>
-      <a th:href="@{/admin/scam-reports}">Scam Reports</a>
-      <a th:href="@{/admin/analytics}">Analytics</a>
-      <a th:href="@{/account}">Profile</a>
+      <a class="nav-item" th:href="@{/admin/dashboard}" title="Dashboard"><i data-lucide="layout-dashboard"></i><span class="nav-text">Dashboard</span></a>
+      <a class="nav-item" th:href="@{/admin/companies}" title="Companies"><i data-lucide="building-2"></i><span class="nav-text">Companies</span></a>
+      <a class="nav-item" th:href="@{/admin/internships}" title="Internships"><i data-lucide="briefcase"></i><span class="nav-text">Internships</span></a>
+      <a class="nav-item" th:href="@{/admin/applications}" title="Applications"><i data-lucide="file-text"></i><span class="nav-text">Applications</span></a>
+      <a class="nav-item" th:href="@{/admin/users}" title="Users"><i data-lucide="users"></i><span class="nav-text">Users</span></a>
+      <a class="nav-item" th:href="@{/admin/scam-reports}" title="Scam Reports"><i data-lucide="shield-alert"></i><span class="nav-text">Scam Reports</span></a>
+      <a class="nav-item" th:href="@{/admin/analytics}" title="Analytics"><i data-lucide="bar-chart-3"></i><span class="nav-text">Analytics</span></a>
+      <a class="nav-item" th:href="@{/account}" title="Profile"><i data-lucide="user-circle"></i><span class="nav-text">Profile</span></a>
     </th:block>
-    <a th:href="@{/notifications}">Notifications<span class="badge badge-warn" th:if="${unreadCount != null and unreadCount > 0}" th:text="${unreadCount}" style="margin-left:.3rem">0</span></a>
-    <span class="muted small" sec:authentication="name">user</span>
-    <form th:action="@{/logout}" method="post"><button type="submit" class="btn-link">Logout</button></form>
+    <a class="nav-item nav-notif" th:href="@{/notifications}" title="Notifications">
+      <i data-lucide="bell"></i>
+      <span class="nav-text">Notifications</span>
+      <span class="badge badge-warn" th:if="${unreadCount != null and unreadCount > 0}" th:text="${unreadCount}">0</span>
+    </a>
+  </div>
+  <div class="nav-user">
+    <span class="muted small user-email" sec:authentication="name">user</span>
+    <form th:action="@{/logout}" method="post">
+      <button type="submit" class="btn-link logout-btn" title="Logout">
+        <i data-lucide="log-out"></i>
+        <span class="nav-text">Logout</span>
+      </button>
+    </form>
   </div>
 </nav>
 <div th:fragment="flash">
